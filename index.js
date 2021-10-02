@@ -30,12 +30,12 @@ const logger = winston.createLogger({
 // Routes MW
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/user', require('./routes/user'));
-app.use('/api/task', require('./routes/task/task'));
-app.use('/api/team', require('./routes/team/team'));
-app.use('/api/contact', require('./routes/contact'));
+//app.use('/api/task', require('./routes/task/task'));
+//app.use('/api/team', require('./routes/team/team'));
+//app.use('/api/contact', require('./routes/contact'));
 
 // Connect to database
-mongoose.connect(`mongodb+srv://${config.server.username}:${config.server.password}@cluster0.z9jpz.mongodb.net/${config.server.database}?retryWrites=true&w=majority`, {
+mongoose.connect(`mongodb+srv://${config.server.username}:${config.server.password}@cluster0.10hza.mongodb.net/${config.server.database}?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
