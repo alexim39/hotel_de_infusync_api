@@ -9,7 +9,7 @@ const cors = require('cors');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: ['http://www.kudutask.com', 'http://localhost:4200'],
+    origin: ['http://example.com', 'http://localhost:4200'],
     credentials: true
 }));
 
@@ -30,7 +30,7 @@ const logger = winston.createLogger({
 // Routes MW
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/user', require('./routes/user'));
-//app.use('/api/task', require('./routes/task/task'));
+app.use('/api/client', require('./routes/client'));
 //app.use('/api/team', require('./routes/team/team'));
 //app.use('/api/contact', require('./routes/contact'));
 

@@ -1,6 +1,6 @@
 const { UserModel, SignUpValidator } = require('../../models/user');
 const bcrypt = require('bcryptjs');
-const {EmailClass} = require('./../email/email')
+//const {EmailClass} = require('./../email/email')
 
 module.exports = class SignUp {
 
@@ -16,7 +16,7 @@ module.exports = class SignUp {
 
            // check if user already exist
            const userExist = await UserModel.findOne({ email: req.body.email });
-           if (userExist) res.status(400).json({ msg: `This email already exist, you can reset your password to continue`, code: 400 });
+           if (userExist) return res.status(400).json({ msg: `This email already exist, you can reset your password to continue`, code: 400 });
 
            // hash password
            const salt = await bcrypt.genSalt(10);
@@ -32,11 +32,11 @@ module.exports = class SignUp {
 
             if (user) {
                 // send activation email
-                const email = new EmailClass();
-                email.sendAccountActivationLink(user);
-                res.status(200).json({ msg: `Account created`, code: 200, obj: user });
+                //const email = new EmailClass();
+                //email.sendAccountActivationLink(user);
+                return res.status(200).json({ msg: `Account created`, code: 200, obj: user });
             } else {
-                res.status(404).json({ msg: `Account creation failed`, code: 404 });
+                return res.status(404).json({ msg: `Account creation failed`, code: 404 });
             }  
         } catch (error) {
             return res.status(500).json({ msg: `Sign up process failed`, code: 500 });

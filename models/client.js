@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const yup = require('yup');
 
 //Schema
-const ContactSchema = new mongoose.Schema({
+const ClientSchema = new mongoose.Schema({
     names: {
         type: String,
         require: true,
@@ -21,28 +21,62 @@ const ContactSchema = new mongoose.Schema({
         minlength: 11,
         maxlength: 11
     },
-    sentDate: {
+    address: {
+        type: String,
+        require: true,
+    },
+    arrivalDate: {
+        type: Date,
+        require: true,
+    },
+    departureDate: {
+        type: Date,
+        require: true,
+    },
+    people: {
+        type: Number,
+        default: 1
+    },
+    room: {
+        type: String,
+    },
+    services: {
+        type: String,
+    },
+    status: {
+        type: String,
+        default: 'Pending'
+    },
+    payment: {
+        type: String,
+    },
+    createdDate: {
         type: Date,
         default: Date.now
     },
-    coments: {
+    coment: {
         type: String,
         minlength: 3,
         maxlength: 355,
+        require: true
+    },
+    creator: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User',
         require: true
     }
 })
 
 // yup validation
-const ContactValidator = (comentObj) => {
+const ClientValidator = (clientObj) => {
     let schema = yup.object().shape({
         names: yup.string().required().min(3, 'Names should be a little descriptive').max(100, 'Names is too long'),
         email: yup.string().required().email('Email address is invalid'),
         phone: yup.string().min(11, 'Phone number is invalid').max(11, 'Phone number is invalid').required('Phone number is valid'),
-        coments: yup.string().min(3, 'Comment is too short').max(350, 'Comment is too long')
+        coment: yup.string().min(3, 'Comment is too short').max(350, 'Comment is too long')
     })
 
-    return schema.validate(comentObj).then(comment => comment).catch(error => {
+    return schema.validate(clientObj).then(clientObj => clientObj).catch(error => {
         return {
             message: error.message
         }
@@ -50,5 +84,5 @@ const ContactValidator = (comentObj) => {
 }
 
 // exports
-exports.ContactModel = new mongoose.model('Contact', ContactSchema);
-exports.ContactValidator = ContactValidator;
+exports.ClientModel = new mongoose.model('Client', ClientSchema);
+exports.ClientValidator = ClientValidator;
