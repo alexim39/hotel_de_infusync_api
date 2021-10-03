@@ -9,7 +9,7 @@ const cors = require('cors');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: ['https://alexim39.github.io/hotel_de_infusync', 'http://localhost:4200'],
+    origin: ['https://alexim39.github.io', 'http://localhost:4200'],
     credentials: true
 }));
 
