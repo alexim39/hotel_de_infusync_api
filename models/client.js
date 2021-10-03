@@ -38,7 +38,9 @@ const ClientSchema = new mongoose.Schema({
         default: 1
     },
     room: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Room',
+        require: true
     },
     services: {
         type: String,
@@ -51,6 +53,10 @@ const ClientSchema = new mongoose.Schema({
         type: String,
     },
     createdDate: {
+        type: Date,
+        default: Date.now
+    },
+    modifyDate: {
         type: Date,
         default: Date.now
     },

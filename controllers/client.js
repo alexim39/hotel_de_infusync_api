@@ -1,8 +1,9 @@
 const { ClientModel, ClientValidator } = require('../models/client');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/config');
+const { RoomModel, RoomValidator } = require('../models/room');
 
-module.exports = class Contact {
+module.exports = class Client {
 
     // Create
     static async createNewClientBooking(req, res) {
@@ -15,8 +16,17 @@ module.exports = class Contact {
 
             const booking = await new ClientModel(req.body).save();
 
-            if (booking) return res.status(200).json({ msg: `Booking have been made successfully`, code: 200, obj: booking });
-            return res.status(404).json({ msg: `Client booking failed`, code: 404 });
+            if (!booking) return res.status(404).json({ msg: `Client booking failed`, code: 404 });
+            // return res.status(200).json({ msg: `Booking have been made successfully`, code: 200, obj: booking });
+
+            // Update the room status
+            const room = await RoomModel.findByIdAndUpdate(req.body.room, {
+                status: 'booked',
+                modifyDate: new Date(),
+            }, { new: true });
+
+            if (room) return res.status(200).json({  msg: `Booking have been made successfully`, code: 200, obj: room });
+            return res.status(404).json({ msg: `Booking details does not exist`, code: 404 });
         } catch (error) {
             return res.status(500).json({ msg: `Booking process failed`, code: 500 });
         }
@@ -27,7 +37,7 @@ module.exports = class Contact {
         try {
             jwt.verify(req.token, config.server.token);
 
-           const clients = await ClientModel.find({ }).populate({ path: 'creator' });
+           const clients = await ClientModel.find({ }).populate({ path: 'creator room' });
            if (!clients) return res.status(404).json({ msg: `User not found`, code: 404 });
            return res.status(200).json({ msg: `users found`, code: 200, obj: clients });
         } catch (error) {
@@ -40,7 +50,7 @@ module.exports = class Contact {
         try {
             jwt.verify(req.token, config.server.token);
 
-            const client = await ClientModel.findById( req.params.clientId ).populate({ path: 'creator' });
+            const client = await ClientModel.findById( req.params.clientId ).populate({ path: 'creator room' });
            if (!client) return res.status(404).json({ msg: `Client was not found`, code: 404 });
            return res.status(200).json({ msg: `Client found`, code: 200, obj: client });
 
@@ -54,9 +64,6 @@ module.exports = class Contact {
     static async updateClient(req, res) {
         try {
             jwt.verify(req.token, config.server.token);
-
-            console.log(req.body)
-
             // validate inputs
             const error = await ClientModel(req.body);
             if (error.message) return res.status(400).send(error.message);
@@ -67,10 +74,10 @@ module.exports = class Contact {
                 modifyDate: new Date(),
             }, { new: true });
 
-            if (updatedObj) return res.status(200).json({ msg: `Code updated`, code: 200, obj: updatedObj });
-            return res.status(404).json({ msg: `This code does not exist`, code: 404 });
+            if (updatedObj) return res.status(200).json({ msg: `Client details updated`, code: 200, obj: updatedObj });
+            return res.status(404).json({ msg: `This details does not exist`, code: 404 });
         } catch (error) {
-            return res.status(500).json({ msg: `Code process failed`, code: 500 });
+            return res.status(500).json({ msg: `Details process failed`, code: 500 });
         }
     }
 
